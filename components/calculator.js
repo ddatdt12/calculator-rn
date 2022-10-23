@@ -1,10 +1,19 @@
 import React, { useState } from 'react';
 import { Text, TextInput, View, Button, StyleSheet } from 'react-native';
+import PropTypes from 'prop-types';
 
+Calculator.prototype = {
+    listData: PropTypes.array,
+    onClickItem: PropTypes.func,
+};
 
+Calculator.defaultProps = {
+    listData: [],
+    onClickItem: null,
+};
 
 function Calculator(props) {
-
+    const {listData, onClickItem} = props;
     const [text, setText] = useState('');
     const [result, setResutl] = useState('');
     return (
@@ -25,7 +34,8 @@ function Calculator(props) {
         if (!text) return;
 
         try {
-            setResutl('= ' + eval(text))
+            setResutl('= ' + eval(text));
+            onClickItem({key: (listData.length + 1).toString(), data: text, result: '= ' + eval(text)});
         } catch (error) {
             setResutl("Invalid input")
         }
