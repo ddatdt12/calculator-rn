@@ -1,23 +1,12 @@
-
-import { useWindowDimensions } from 'react-native';
-import MobileView from './views/mobile_view';
-import WebView from './views/web_view';
+import { useWindowDimensions } from "react-native";
+import MobileView from "./views/MobileView";
+import WebView from "./views/WebView";
 
 export default function App() {
   const window = useWindowDimensions();
 
-  return (
-    window.width > 480 ? <WebView /> : <MobileView />
-  );
+  return window.width > 480 ? <WebView /> : <MobileView />;
 }
-
-
-
-
-
-
-// import { useRef, useState } from "react";
-// import { Button, StyleSheet, Text, TextInput, View } from "react-native";
 
 // export default function App() {
 //   const textInputRef = useRef(null);
