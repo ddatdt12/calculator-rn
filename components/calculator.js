@@ -47,7 +47,11 @@ function Calculator({ value, onSubmit }) {
     <View>
       <TextInput ref={textInputRef} style={styles.textInput} />
       <Button title="Calculate" onPress={handleButtonPress} />
-      {text && <Text style={{ fontSize: 30, marginTop: 20 }}>{text}</Text>}
+      {text ? (
+        <Text style={{ fontSize: 30, marginTop: 20 }}>{text}</Text>
+      ) : (
+        <></>
+      )}
     </View>
   );
 }

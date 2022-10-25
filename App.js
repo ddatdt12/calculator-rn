@@ -1,61 +1,89 @@
-import { useWindowDimensions } from "react-native";
-import MobileView from "./views/MobileView";
-import WebView from "./views/WebView";
-
+import { useState } from "react";
+import { StyleSheet, useWindowDimensions, View } from "react-native";
+import Calculator from "./components/Calculator";
+import HistoryTable from "./components/HistoryTable";
 export default function App() {
   const window = useWindowDimensions();
+  const [selectedExpression, setSelectedExpression] = useState(null);
+  const [listData, setListData] = useState([]);
 
-  return window.width > 480 ? <WebView /> : <MobileView />;
+  function handleOnSubmit(item) {
+    const newList = [...listData];
+    newList.unshift(item);
+    setListData(newList);
+  }
+
+  return window.width > 480 ? (
+    <View style={styles.mainPageStyle}>
+      <View style={{ flexDirection: "row", flex: 1, justifyContent: "center" }}>
+        <View style={styles.tableStyle}>
+          <HistoryTable
+            style={styles.tableBorderStyle}
+            listData={listData}
+            onClickItem={(item) => {
+              setSelectedExpression(item);
+            }}
+          />
+        </View>
+        <View style={styles.calculatorStyle}>
+          <Calculator value={selectedExpression} onSubmit={handleOnSubmit} />
+        </View>
+      </View>
+    </View>
+  ) : (
+    <View style={mobileStyles.mainPageStyle}>
+      <Calculator
+        style={mobileStyles.calculatorStyle}
+        value={selectedExpression}
+        onSubmit={handleOnSubmit}
+      />
+      <HistoryTable
+        style={mobileStyles.tableStyle}
+        listData={listData}
+        onClickItem={(item) => {
+          setSelectedExpression(item);
+        }}
+      />
+    </View>
+  );
 }
 
-// export default function App() {
-//   const textInputRef = useRef(null);
-//   const [text, setText] = useState("");
+const styles = StyleSheet.create({
+  tableBorderStyle: {
+    height: 500,
+    borderColor: "gray",
+    borderWidth: 1,
+    borderRadius: 20,
+    padding: 10,
+  },
+  mainPageStyle: {
+    flexDirection: "row",
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  calculatorStyle: {
+    width: "30%",
+    marginLeft: 40,
+  },
+  tableStyle: {
+    width: "30%",
+  },
+});
 
-//   const handleButtonPress = () => {
-//     try {
-//       if (!textInputRef?.current?.value) {
-//         setText("Please enter an expression!");
-//         return;
-//       }
-//       let result = eval(textInputRef.current.value);
-//       setText("Result: " + result);
-//       textInputRef.current.style = { ...styles.textInput };
-//     } catch (error) {
-//       setText("Invalid input");
-//       textInputRef.current.style.borderColor = "red";
-//     }
-//   };
-
-//   return (
-//     <View style={styles.container}>
-//       <Text style={{ fontSize: 50 }}>Calculator!</Text>
-//       <TextInput ref={textInputRef} style={styles.textInput} />
-//       <Button title="Calculate" onPress={handleButtonPress} />
-//       {text && <Text style={{ fontSize: 30, marginTop: 20 }}>{text}</Text>}
-//     </View>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: "#fff",
-//     alignItems: "center",
-//     justifyContent: "center",
-//     fontSize: 40,
-//   },
-//   error: {
-//     color: "red",
-//     marginBottom: 10,
-//     fontSize: 20,
-//   },
-//   textInput: {
-//     borderColor: "blue",
-//     borderWidth: 1,
-//     marginVertical: 10,
-//     padding: 10,
-//     fontSize: 30,
-//     marginBottom: 20,
-//   },
-// });
+const mobileStyles = StyleSheet.create({
+  mainPageStyle: {
+    padding: 10,
+    marginTop: 40,
+    flex: 1,
+  },
+  tableStyle: {
+    padding: 10,
+    borderTopColor: "gray",
+    borderTopWidth: 1,
+    flex: 0.7,
+  },
+  calculatorStyle: {
+    flex: 0.3,
+  },
+});
