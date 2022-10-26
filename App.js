@@ -20,8 +20,12 @@ export default function App() {
           <HistoryTable
             style={styles.tableBorderStyle}
             listData={listData}
-            onClickItem={(item) => {
-              setSelectedExpression(item);
+            onClickItem={(index) => {
+              const newList = [...listData];
+              newList.forEach(e => e.isSelected = false);
+              newList[index].isSelected = true;
+              setListData(newList);
+              setSelectedExpression(listData[index]);
             }}
           />
         </View>

@@ -25,9 +25,9 @@ function HistoryTable(props) {
       <SearchBar />
       <FlatList
         data={listData}
-        renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => onClickItem(item)}>
-            <View style={styles.historyItemStyle}>
+        renderItem={({ item, index }) => (
+          <TouchableOpacity onPress={() => onClickItem(index)}>
+            <View style={item.isSelected ? styles.SelectedStyle : styles.historyItemStyle} >
               <Text style={styles.dataStyle}>{item.data}</Text>
               <Text style={styles.resultStyle}>{item.result}</Text>
             </View>
@@ -45,7 +45,7 @@ function HistoryTable(props) {
 const styles = StyleSheet.create({
   historyItemStyle: {
     alignItems: "flex-end",
-    marginRight: 30,
+    marginRight: 10,
     marginBottom: 10,
   },
   dataStyle: {
@@ -53,6 +53,12 @@ const styles = StyleSheet.create({
   },
   resultStyle: {
     fontSize: 20,
+  },
+  SelectedStyle: {
+    alignItems: "flex-end",
+    marginRight: 10,
+    marginBottom: 10,
+    backgroundColor: "#f0ffff"
   },
 });
 
