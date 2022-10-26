@@ -28,7 +28,7 @@ function Calculator({ value, onSubmit }) {
       onSubmit({
         key: Math.random() * 10000,
         data: textInputRef.current.value,
-        result,
+        result
       });
     } catch (error) {
       setText("Invalid input");

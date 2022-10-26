@@ -6,11 +6,13 @@ export default function App() {
   const window = useWindowDimensions();
   const [selectedExpression, setSelectedExpression] = useState(null);
   const [listData, setListData] = useState([]);
+  const [idn,setIndex] = useState([]);
 
   function handleOnSubmit(item) {
     const newList = [...listData];
     newList.unshift(item);
     setListData(newList);
+    setIndex(idn + 1);
   }
 
   return window.width > 480 ? (
@@ -20,17 +22,15 @@ export default function App() {
           <HistoryTable
             style={styles.tableBorderStyle}
             listData={listData}
+            id={idn}
             onClickItem={(index) => {
-              const newList = [...listData];
-              newList.forEach(e => e.isSelected = false);
-              newList[index].isSelected = true;
-              setListData(newList);
+              setIndex(index);
               setSelectedExpression(listData[index]);
             }}
           />
         </View>
         <View style={styles.calculatorStyle}>
-          <Calculator value={selectedExpression} onSubmit={handleOnSubmit} />
+          <Calculator value={selectedExpression} onSubmit={handleOnSubmit}/>
         </View>
       </View>
     </View>
@@ -44,6 +44,7 @@ export default function App() {
       <HistoryTable
         style={mobileStyles.tableStyle}
         listData={listData}
+        id={idn}
         onClickItem={(item) => {
           setSelectedExpression(item);
         }}

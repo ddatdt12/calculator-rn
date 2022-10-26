@@ -19,7 +19,7 @@ HistoryTable.defaultProps = {
 };
 
 function HistoryTable(props) {
-  const { listData, onClickItem } = props;
+  const { listData, onClickItem, id } = props;
   return listData.length != 0 ? (
     <View style={props.style}>
       <SearchBar />
@@ -27,7 +27,7 @@ function HistoryTable(props) {
         data={listData}
         renderItem={({ item, index }) => (
           <TouchableOpacity onPress={() => onClickItem(index)}>
-            <View style={item.isSelected ? styles.SelectedStyle : styles.historyItemStyle} >
+            <View style={id == index ? styles.SelectedStyle : styles.historyItemStyle} >
               <Text style={styles.dataStyle}>{item.data}</Text>
               <Text style={styles.resultStyle}>{item.result}</Text>
             </View>
