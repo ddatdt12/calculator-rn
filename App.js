@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { StyleSheet, useWindowDimensions, View } from "react-native";
-import Calculator from "./components/Calculator";
+import { StyleSheet, useWindowDimensions, View, Modal } from "react-native";
+import Calculator from "./components/calculator";
 import HistoryTable from "./components/HistoryTable";
 export default function App() {
   const window = useWindowDimensions();
   const [selectedExpression, setSelectedExpression] = useState(null);
   const [listData, setListData] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
 
   function handleOnSubmit(item) {
     const newList = [...listData];
@@ -13,37 +14,50 @@ export default function App() {
     setListData(newList);
   }
 
-  return window.width > 480 ? (
+  return (
     <View style={styles.mainPageStyle}>
-      <View style={{ flexDirection: "row", flex: 1, justifyContent: "center" }}>
-        <View style={styles.tableStyle}>
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}>
+        <View>
+        </View>
+      </Modal>
+      {window.width > 480 ?
+        <View style={styles.mainPageStyle}>
+          <View style={{ flexDirection: "row", flex: 1, justifyContent: "center" }}>
+            <View style={styles.tableStyle}>
+              <HistoryTable
+                style={styles.tableBorderStyle}
+                listData={listData}
+                onClickItem={(item) => {
+                  setSelectedExpression(item);
+                }}
+              />
+            </View>
+            <View style={styles.calculatorStyle}>
+              <Calculator value={selectedExpression} onSubmit={handleOnSubmit} />
+            </View>
+          </View>
+        </View>
+        :
+        <View style={mobileStyles.mainPageStyle}>
+          <Calculator
+            style={mobileStyles.calculatorStyle}
+            value={selectedExpression}
+            onSubmit={handleOnSubmit}
+          />
           <HistoryTable
-            style={styles.tableBorderStyle}
+            style={mobileStyles.tableStyle}
             listData={listData}
             onClickItem={(item) => {
               setSelectedExpression(item);
             }}
           />
-        </View>
-        <View style={styles.calculatorStyle}>
-          <Calculator value={selectedExpression} onSubmit={handleOnSubmit} />
-        </View>
-      </View>
-    </View>
-  ) : (
-    <View style={mobileStyles.mainPageStyle}>
-      <Calculator
-        style={mobileStyles.calculatorStyle}
-        value={selectedExpression}
-        onSubmit={handleOnSubmit}
-      />
-      <HistoryTable
-        style={mobileStyles.tableStyle}
-        listData={listData}
-        onClickItem={(item) => {
-          setSelectedExpression(item);
-        }}
-      />
+        </View>}
     </View>
   );
 }

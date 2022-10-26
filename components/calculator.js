@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Text, TextInput, View, Button, StyleSheet } from "react-native";
 import PropTypes from "prop-types";
+import Mexp from "math-expression-evaluator";
 
 Calculator.prototype = {
   value: PropTypes.object,
@@ -22,7 +23,7 @@ function Calculator({ value, onSubmit }) {
         setText("Please enter an expression!");
         return;
       }
-      let result = eval(textInputRef.current.value);
+      let result = Mexp.eval(textInputRef.current.value);
       setText("Result: " + result);
       textInputRef.current.style = { ...styles.textInput };
       onSubmit({
@@ -45,7 +46,7 @@ function Calculator({ value, onSubmit }) {
 
   return (
     <View>
-      <TextInput ref={textInputRef} style={styles.textInput} />
+      <TextInput ref={textInputRef} style={styles.textInput} onLayout={() => textInputRef.current.focus()} />
       <Button title="Calculate" onPress={handleButtonPress} />
       {text ? (
         <Text style={{ fontSize: 30, marginTop: 20 }}>{text}</Text>
