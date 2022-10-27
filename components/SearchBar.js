@@ -1,12 +1,13 @@
-import {
-  View,
-  TextInput,
-  StyleSheet,
-  KeyboardAvoidingView,
-} from "react-native";
+import { TextInput, StyleSheet } from "react-native";
 
-const SearchBar = () => {
-  return <TextInput placeholder="Search here" style={styles.searchStyle} />;
+const SearchBar = (props) => {
+  return (
+    <TextInput
+      placeholder="Search here"
+      style={styles.searchStyle}
+      {...props}
+    />
+  );
 };
 
 const styles = StyleSheet.create({
