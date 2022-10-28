@@ -3,6 +3,7 @@ import {
   Text,
   FlatList,
   StyleSheet,
+  Button,
   TouchableOpacity,
 } from "react-native";
 import SearchBar from "./SearchBar";
@@ -20,7 +21,7 @@ HistoryTable.defaultProps = {
 };
 
 function HistoryTable(props) {
-  const { listData, onClickItem, id, onRemoveItem } = props;
+  const { listData, onClickItem, id, onRemoveItem, onRemoveList } = props;
   return listData.length != 0 ? (
     <View style={props.style}>
       <SearchBar />
@@ -41,6 +42,7 @@ function HistoryTable(props) {
           </TouchableOpacity>
         )}
       />
+      <Button onPress={()=>onRemoveList()} title="Clear all!!!"/>
     </View>
   ) : (
     <View style={props.style}>
@@ -75,7 +77,7 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
   item: {
-    justifyContent: "flex-end"
+    alignItems: "flex-end"
   },
 });
 

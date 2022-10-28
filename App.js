@@ -23,6 +23,14 @@ export default function App() {
     setSelectedExpression(null);
   }
 
+  function handleOnRemoveList() {
+    setIndex();
+    console.log(12);
+    setSelectedExpression(null);
+    console.log(12);
+    setListData([]);
+  }
+
   return window.width > 480 ? (
     <View style={styles.mainPageStyle}>
       <View style={{ flexDirection: "row", flex: 1, justifyContent: "center" }}>
@@ -31,6 +39,7 @@ export default function App() {
             style={styles.tableBorderStyle}
             listData={listData}
             id={idn}
+            onRemoveList={handleOnRemoveList}
             onRemoveItem={(index) => handleOnRemoveItem(index)}
             onClickItem={(index) => {
               setIndex(index);

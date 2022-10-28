@@ -37,6 +37,7 @@ function Calculator({ value, onSubmit }) {
   };
 
   useEffect(() => {
+    console.log(value);
     if (value) {
       textInputRef.current.value = value.data;
       setText("Result: " + value.result);
