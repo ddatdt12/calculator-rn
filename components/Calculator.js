@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Text, TextInput, View, Button, StyleSheet } from "react-native";
 import PropTypes from "prop-types";
+import CButton from "./CButton";
 
 Calculator.prototype = {
   value: PropTypes.object,
@@ -69,7 +70,7 @@ function Calculator({ value, onSubmit }) {
           borderColor: haveError ? "red" : "black",
         }}
       />
-      <Button title="Calculate" onPress={handleButtonPress} color="red" />
+      <CButton title="Calculate" onPress={handleButtonPress} color="red" />
       {text ? (
         <Text style={{ fontSize: 30, marginTop: 20 }}>{text}</Text>
       ) : (
