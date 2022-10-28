@@ -1,6 +1,6 @@
 
 import { StyleSheet, useWindowDimensions, View, Modal } from "react-native";
-import Calculator from "./components/calculator";
+import Calculator from "./components/Calculator";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
 import HistoryTable from "./components/HistoryTable";
