@@ -39,6 +39,34 @@ export default function App() {
     })();
   }, [listData]);
 
+  useEffect(() => {
+    (async () => {
+      try {
+        const value = await AsyncStorage.getItem("EXPRESSION_LIST");
+        if (value !== null) {
+          console.log(value);
+          const previousData = JSON.parse(value);
+          if (Array.isArray(previousData)) {
+            setListData(previousData);
+          }
+        }
+      } catch (e) {
+        console.log("getItem:", e);
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const jsonValue = JSON.stringify(listData);
+        await AsyncStorage.setItem("EXPRESSION_LIST", jsonValue);
+      } catch (e) {
+        console.log("setItem:", e);
+      }
+    })();
+  }, [listData]);
+
   function handleOnSubmit(item) {
     const newList = [...listData];
     newList.unshift(item);
