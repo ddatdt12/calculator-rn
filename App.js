@@ -1,12 +1,43 @@
-import { useState } from "react";
+
 import { StyleSheet, useWindowDimensions, View, Modal } from "react-native";
 import Calculator from "./components/calculator";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useEffect, useState } from "react";
 import HistoryTable from "./components/HistoryTable";
+
 export default function App() {
   const window = useWindowDimensions();
   const [selectedExpression, setSelectedExpression] = useState(null);
   const [listData, setListData] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const value = await AsyncStorage.getItem("EXPRESSION_LIST");
+        if (value !== null) {
+          console.log(value);
+          const previousData = JSON.parse(value);
+          if (Array.isArray(previousData)) {
+            setListData(previousData);
+          }
+        }
+      } catch (e) {
+        console.log("getItem:", e);
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const jsonValue = JSON.stringify(listData);
+        await AsyncStorage.setItem("EXPRESSION_LIST", jsonValue);
+      } catch (e) {
+        console.log("setItem:", e);
+      }
+    })();
+  }, [listData]);
 
   function handleOnSubmit(item) {
     const newList = [...listData];
