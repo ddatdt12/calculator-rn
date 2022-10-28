@@ -15,6 +15,14 @@ export default function App() {
     setIndex(idn + 1);
   }
 
+  function handleOnRemoveItem(index) {
+    const newList = [...listData];
+    newList.splice(index,1);
+    setListData(newList);
+    setIndex();
+    setSelectedExpression(null);
+  }
+
   return window.width > 480 ? (
     <View style={styles.mainPageStyle}>
       <View style={{ flexDirection: "row", flex: 1, justifyContent: "center" }}>
@@ -23,6 +31,7 @@ export default function App() {
             style={styles.tableBorderStyle}
             listData={listData}
             id={idn}
+            onRemoveItem={(index) => handleOnRemoveItem(index)}
             onClickItem={(index) => {
               setIndex(index);
               setSelectedExpression(listData[index]);

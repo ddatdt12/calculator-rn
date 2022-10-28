@@ -40,6 +40,9 @@ function Calculator({ value, onSubmit }) {
     if (value) {
       textInputRef.current.value = value.data;
       setText("Result: " + value.result);
+    } else {
+      textInputRef.current.value = null;
+      setText(null);
     }
   }, [value]);
 

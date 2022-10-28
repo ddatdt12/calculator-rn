@@ -7,6 +7,7 @@ import {
 } from "react-native";
 import SearchBar from "./SearchBar";
 import PropTypes from "prop-types";
+import { IconButton} from "react-native-paper";
 
 HistoryTable.prototype = {
   listData: PropTypes.array,
@@ -19,7 +20,7 @@ HistoryTable.defaultProps = {
 };
 
 function HistoryTable(props) {
-  const { listData, onClickItem, id } = props;
+  const { listData, onClickItem, id, onRemoveItem } = props;
   return listData.length != 0 ? (
     <View style={props.style}>
       <SearchBar />
@@ -27,9 +28,15 @@ function HistoryTable(props) {
         data={listData}
         renderItem={({ item, index }) => (
           <TouchableOpacity onPress={() => onClickItem(index)}>
-            <View style={id == index ? styles.SelectedStyle : styles.historyItemStyle} >
-              <Text style={styles.dataStyle}>{item.data}</Text>
-              <Text style={styles.resultStyle}>{item.result}</Text>
+            <View style={id == index ? styles.container2 : styles.container1} >
+              <View>
+                {id == index ? <IconButton icon="delete" iconColor={"blue"} size={20} style={styles.button}
+                onPress={() => onRemoveItem(index)}/> : <Text></Text>}
+              </View>
+              <View style={styles.item}>
+                <Text style={styles.dataStyle}>{item.data}</Text>
+                <Text style={styles.resultStyle}>{item.result}</Text>
+              </View>
             </View>
           </TouchableOpacity>
         )}
@@ -43,22 +50,32 @@ function HistoryTable(props) {
 }
 
 const styles = StyleSheet.create({
-  historyItemStyle: {
-    alignItems: "flex-end",
-    marginRight: 10,
-    marginBottom: 10,
-  },
   dataStyle: {
     fontSize: 30,
   },
   resultStyle: {
     fontSize: 20,
   },
-  SelectedStyle: {
-    alignItems: "flex-end",
+  container1: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginRight: 10,
+    marginBottom: 10,
+  },
+  container2: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     marginRight: 10,
     marginBottom: 10,
     backgroundColor: "#f0ffff"
+  },
+  button:{
+    marginTop: 15,
+  },
+  item: {
+    justifyContent: "flex-end"
   },
 });
 
