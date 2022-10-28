@@ -22,12 +22,15 @@ function Calculator({ value, onSubmit }) {
         setText("Please enter an expression!");
         return;
       }
-      let result = eval(textInputRef.current.value);
+      const expressionStr = textInputRef.current.value.replace(/\s/g, "");
+
+      console.log(expressionStr);
+      let result = eval(expressionStr);
       setText("Result: " + result);
       textInputRef.current.style = { ...styles.textInput };
       onSubmit({
-        key: Math.random() * 10000,
-        data: textInputRef.current.value,
+        key: Math.random() * 10000000,
+        data: expressionStr,
         result,
       });
     } catch (error) {

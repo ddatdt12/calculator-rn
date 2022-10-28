@@ -8,6 +8,7 @@ import {
 import SearchBar from "./SearchBar";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
+import HighlightText from "./HighlightText";
 
 HistoryTable.prototype = {
   listData: PropTypes.array,
@@ -25,7 +26,7 @@ function HistoryTable({ listData, onClickItem }) {
 
   useEffect(() => {
     let newList = listData.filter((item) =>
-      item.data
+      (item.data + item.result)
         .toLowerCase()
         .includes(searchTerm.replace(" ", "").toLowerCase())
     );
@@ -46,8 +47,13 @@ function HistoryTable({ listData, onClickItem }) {
             renderItem={({ item }) => (
               <TouchableOpacity onPress={() => onClickItem(item)}>
                 <View style={styles.historyItemStyle}>
-                  <Text style={styles.dataStyle}>{item.data}</Text>
-                  <Text style={styles.resultStyle}>{item.result}</Text>
+                  <HighlightText text={item.data} highlight={searchTerm} />
+                  <HighlightText
+                    text={item.result + ""}
+                    highlight={searchTerm}
+                  />
+                  {/* <Text style={styles.dataStyle}>{item.data}</Text> */}
+                  {/* <Text style={styles.resultStyle}>{item.result}</Text> */}
                 </View>
               </TouchableOpacity>
             )}
