@@ -15,7 +15,6 @@ export default function App() {
         const value = await AsyncStorage.getItem("EXPRESSION_LIST");
         if (value !== null) {
           const previousData = JSON.parse(value);
-          console.log(previousData);
           if (Array.isArray(previousData)) {
             setListData(previousData);
           }

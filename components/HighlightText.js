@@ -1,30 +1,41 @@
 import React from "react";
+import { Text } from "react-native";
 
-const HighlightText = ({ text = "", highlight = "" }) => {
-  if (!highlight.trim()) {
-    return <span>{text}</span>;
-  }
+const SIGNS = ["+", "-", "*", "/", "%"];
 
-  const parts = text.split(
-    new RegExp(`(${highlight.replace(/[&\/\\+]/g, "\\+")})`, "gi")
+const handleRawExpressionStr = (rawExpressionStr) => {
+  let charArr = rawExpressionStr.split("");
+
+  let result = charArr.map((char) =>
+    SIGNS.includes(char) ? `\\${char}` : char
   );
-  console.log("parts: ", parts);
-  console.log("highlight: ", highlight.replace("+", "\\+"));
+
+  return result.join("");
+};
+
+const HighlightText = ({ text = "", highlight = "", ...props }) => {
+  if (!highlight.trim()) {
+    return <Text {...props}>{text}</Text>;
+  }
+  const parts = text.split(
+    new RegExp(`(${handleRawExpressionStr(highlight)})`, "gi")
+  );
+
   return (
-    <span>
+    <Text>
       {parts.map((part, i) => (
-        <span
+        <Text
           key={i}
-          style={
-            part.toLowerCase() === highlight.toLowerCase()
-              ? { fontWeight: "bold" }
-              : {}
-          }
+          style={{
+            ...props?.style,
+            fontWeight:
+              part.toLowerCase() === highlight.toLowerCase() ? "900" : "normal",
+          }}
         >
           {part}
-        </span>
+        </Text>
       ))}
-    </span>
+    </Text>
   );
 };
 

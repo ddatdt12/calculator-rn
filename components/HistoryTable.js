@@ -47,13 +47,16 @@ function HistoryTable({ listData, onClickItem }) {
             renderItem={({ item }) => (
               <TouchableOpacity onPress={() => onClickItem(item)}>
                 <View style={styles.historyItemStyle}>
-                  <HighlightText text={item.data} highlight={searchTerm} />
+                  <HighlightText
+                    text={item.data}
+                    highlight={searchTerm}
+                    style={styles.dataStyle}
+                  />
                   <HighlightText
                     text={item.result + ""}
                     highlight={searchTerm}
+                    style={styles.resultStyle}
                   />
-                  {/* <Text style={styles.dataStyle}>{item.data}</Text> */}
-                  {/* <Text style={styles.resultStyle}>{item.result}</Text> */}
                 </View>
               </TouchableOpacity>
             )}
