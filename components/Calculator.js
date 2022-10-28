@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Text, TextInput, View, Button, StyleSheet } from "react-native";
 import PropTypes from "prop-types";
+import CButton from "./CButton";
 
 Calculator.prototype = {
   value: PropTypes.object,
@@ -13,26 +14,42 @@ Calculator.defaultProps = {
 };
 
 function Calculator({ value, onSubmit }) {
-  const textInputRef = useRef(null);
+  const [expression, setExpression] = useState("");
+  const [haveError, setHaveError] = useState(false);
   const [text, setText] = useState("");
-
+  const getCircularReplacer = () => {
+    const seen = new WeakSet();
+    return (key, value) => {
+      if (typeof value === "object" && value !== null) {
+        if (seen.has(value)) {
+          return;
+        }
+        seen.add(value);
+      }
+      return value;
+    };
+  };
   const handleButtonPress = () => {
     try {
-      if (!textInputRef?.current?.value) {
+      if (!expression.trim()) {
         setText("Please enter an expression!");
+        setHaveError(true);
+
         return;
       }
-      let result = eval(textInputRef.current.value);
+      setHaveError(false);
+      const expressionStr = expression.replace(/\s/g, "");
+
+      let result = eval(expressionStr);
       setText("Result: " + result);
-      textInputRef.current.style = { ...styles.textInput };
       onSubmit({
-        key: Math.random() * 10000,
-        data: textInputRef.current.value,
+        key: Math.random() * 10000000,
+        data: expressionStr,
         result,
       });
     } catch (error) {
+      setHaveError(true);
       setText("Invalid input");
-      textInputRef.current.style.borderColor = "red";
     }
   };
 
@@ -45,8 +62,15 @@ function Calculator({ value, onSubmit }) {
 
   return (
     <View>
-      <TextInput ref={textInputRef} style={styles.textInput} />
-      <Button title="Calculate" onPress={handleButtonPress} />
+      <TextInput
+        value={expression}
+        onChangeText={(text) => setExpression(text)}
+        style={{
+          ...styles.textInput,
+          borderColor: haveError ? "red" : "black",
+        }}
+      />
+      <CButton title="Calculate" onPress={handleButtonPress} color="red" />
       {text ? (
         <Text style={{ fontSize: 30, marginTop: 20 }}>{text}</Text>
       ) : (
