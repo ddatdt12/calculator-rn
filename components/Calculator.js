@@ -54,12 +54,12 @@ function Calculator({ value, onSubmit }) {
   };
 
   useEffect(() => {
-    console.log(value);
-    if (value) {
-      textInputRef.current.value = value.data;
+    if (value != null) {
+      setExpression(value.data);
       setText("Result: " + value.result);
     } else {
-      textInputRef.current.value = null;
+      console.log(123);
+      setExpression("");
       setText(null);
     }
   }, [value]);

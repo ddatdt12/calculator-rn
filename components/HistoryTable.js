@@ -15,11 +15,17 @@ import HighlightText from "./HighlightText";
 HistoryTable.prototype = {
   listData: PropTypes.array,
   onClickItem: PropTypes.func,
+  id: PropTypes.number,
+  onRemoveItem: PropTypes.func,
+  onRemoveList: PropTypes.func
 };
 
 HistoryTable.defaultProps = {
   listData: [],
   onClickItem: null,
+  id: null,
+  onRemoveItem: null,
+  onRemoveList: null
 };
 
 function HistoryTable({ listData, onClickItem, id, onRemoveItem, onRemoveList }) {
@@ -46,11 +52,11 @@ function HistoryTable({ listData, onClickItem, id, onRemoveItem, onRemoveList })
           />
           <FlatList
             data={expressions}
-            renderItem={({ item }) => (
-              <TouchableOpacity onPress={() => onClickItem(item)}>
+            renderItem={({ item, index }) => (
+              <TouchableOpacity onPress={() => onClickItem(index)}>
                 <View style={id == index ? styles.container2 : styles.container1}>
                   <View>
-                {id == index ? <IconButton icon="delete" iconColor={"blue"} size={20} style={styles.button}
+                {id == index ? <IconButton icon="close" size={20} style={styles.button} color="red" backgroundColor="red"
                 onPress={() => onRemoveItem(index)}/> : <Text></Text>}
               </View>
               <View style={styles.item}>
@@ -69,6 +75,7 @@ function HistoryTable({ listData, onClickItem, id, onRemoveItem, onRemoveList })
               </TouchableOpacity>
             )}
           />
+          <Button onPress={()=>onRemoveList()} title="Clear all!!!"/>
         </>
       ) : (
         <Text style={styles.dataStyle}>No data found</Text>

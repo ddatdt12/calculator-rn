@@ -55,9 +55,7 @@ export default function App() {
 
   function handleOnRemoveList() {
     setIndex();
-    console.log(12);
     setSelectedExpression(null);
-    console.log(12);
     setListData([]);
   }
 
