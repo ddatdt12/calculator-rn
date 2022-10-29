@@ -8,7 +8,7 @@ export default function App() {
   const window = useWindowDimensions();
   const [selectedExpression, setSelectedExpression] = useState(null);
   const [listData, setListData] = useState([]);
-  const [idn,setIndex] = useState([]);
+  const [idn, setIndex] = useState([]);
 
   useEffect(() => {
     (async () => {
@@ -29,6 +29,7 @@ export default function App() {
   useEffect(() => {
     (async () => {
       try {
+        console.log("List data:", listData);
         const jsonValue = JSON.stringify(listData);
         await AsyncStorage.setItem("EXPRESSION_LIST", jsonValue);
       } catch (e) {
@@ -47,7 +48,7 @@ export default function App() {
 
   function handleOnRemoveItem(index) {
     const newList = [...listData];
-    newList.splice(index,1);
+    newList.splice(index, 1);
     setListData(newList);
     setIndex();
     setSelectedExpression(null);
@@ -76,7 +77,7 @@ export default function App() {
           />
         </View>
         <View style={styles.calculatorStyle}>
-          <Calculator value={selectedExpression} onSubmit={handleOnSubmit}/>
+          <Calculator value={selectedExpression} onSubmit={handleOnSubmit} />
         </View>
       </View>
     </View>

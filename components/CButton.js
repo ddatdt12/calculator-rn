@@ -2,9 +2,9 @@ import React from "react";
 import { Pressable, StyleSheet, Text } from "react-native";
 
 export default function CButton(props) {
-  const { onPress, title = "Save" } = props;
+  const { onPress, title = "Save", style, ...others } = props;
   return (
-    <Pressable style={styles.button} onPress={onPress}>
+    <Pressable style={{ ...styles.button, ...style }} onPress={onPress}>
       <Text style={styles.text}>{title}</Text>
     </Pressable>
   );

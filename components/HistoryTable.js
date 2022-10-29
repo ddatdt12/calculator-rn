@@ -8,16 +8,17 @@ import {
 } from "react-native";
 import SearchBar from "./SearchBar";
 import PropTypes from "prop-types";
-import { IconButton} from "react-native-paper";
+import { IconButton } from "react-native-paper";
 import { useEffect, useState } from "react";
 import HighlightText from "./HighlightText";
+import CButton from "./CButton";
 
 HistoryTable.prototype = {
   listData: PropTypes.array,
   onClickItem: PropTypes.func,
   id: PropTypes.number,
   onRemoveItem: PropTypes.func,
-  onRemoveList: PropTypes.func
+  onRemoveList: PropTypes.func,
 };
 
 HistoryTable.defaultProps = {
@@ -25,10 +26,16 @@ HistoryTable.defaultProps = {
   onClickItem: null,
   id: null,
   onRemoveItem: null,
-  onRemoveList: null
+  onRemoveList: null,
 };
 
-function HistoryTable({ listData, onClickItem, id, onRemoveItem, onRemoveList }) {
+function HistoryTable({
+  listData,
+  onClickItem,
+  id,
+  onRemoveItem,
+  onRemoveList,
+}) {
   const [expressions, setExpressions] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -54,28 +61,40 @@ function HistoryTable({ listData, onClickItem, id, onRemoveItem, onRemoveList })
             data={expressions}
             renderItem={({ item, index }) => (
               <TouchableOpacity onPress={() => onClickItem(index)}>
-                <View style={id == index ? styles.container2 : styles.container1}>
+                <View
+                  style={id == index ? styles.container2 : styles.container1}
+                >
                   <View>
-                {id == index ? <IconButton icon="close" size={20} style={styles.button} color="red" backgroundColor="red"
-                onPress={() => onRemoveItem(index)}/> : <Text></Text>}
-              </View>
-              <View style={styles.item}>
-              <HighlightText
-                    text={item.data}
-                    highlight={searchTerm}
-                    style={styles.dataStyle}
-                  />
-                  <HighlightText
-                    text={item.result + ""}
-                    highlight={searchTerm}
-                    style={styles.resultStyle}
-                  />
-              </View>
+                    <IconButton
+                      icon="close"
+                      size={20}
+                      style={styles.button}
+                      color="red"
+                      backgroundColor="red"
+                      onPress={() => onRemoveItem(index)}
+                    />
+                  </View>
+                  <View style={styles.item}>
+                    <HighlightText
+                      text={item.data}
+                      highlight={searchTerm}
+                      style={styles.dataStyle}
+                    />
+                    <HighlightText
+                      text={item.result + ""}
+                      highlight={searchTerm}
+                      style={styles.resultStyle}
+                    />
+                  </View>
                 </View>
               </TouchableOpacity>
             )}
           />
-          <Button onPress={()=>onRemoveList()} title="Clear all!!!"/>
+          <CButton
+            onPress={() => onRemoveList()}
+            style={{ backgroundColor: "red", padding: 20 }}
+            title="Clear all!!!"
+          />
         </>
       ) : (
         <Text style={styles.dataStyle}>No data found</Text>
@@ -94,24 +113,24 @@ const styles = StyleSheet.create({
   },
   container1: {
     flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginRight: 10,
     marginBottom: 10,
   },
   container2: {
     flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginRight: 10,
     marginBottom: 10,
-    backgroundColor: "#f0ffff"
+    backgroundColor: "#f0ffff",
   },
-  button:{
+  button: {
     marginTop: 15,
   },
   item: {
-    alignItems: "flex-end"
+    alignItems: "flex-end",
   },
   tableBorderStyle: {
     height: 500,
