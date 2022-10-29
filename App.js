@@ -8,6 +8,7 @@ export default function App() {
   const window = useWindowDimensions();
   const [selectedExpression, setSelectedExpression] = useState(null);
   const [listData, setListData] = useState([]);
+  const [idn, setIndex] = useState([]);
 
   useEffect(() => {
     (async () => {
@@ -28,6 +29,7 @@ export default function App() {
   useEffect(() => {
     (async () => {
       try {
+        console.log("List data:", listData);
         const jsonValue = JSON.stringify(listData);
         await AsyncStorage.setItem("EXPRESSION_LIST", jsonValue);
       } catch (e) {
@@ -41,6 +43,21 @@ export default function App() {
     const newList = [...listData];
     newList.unshift(item);
     setListData(newList);
+    setIndex(idn + 1);
+  }
+
+  function handleOnRemoveItem(index) {
+    const newList = [...listData];
+    newList.splice(index, 1);
+    setListData(newList);
+    setIndex();
+    setSelectedExpression(null);
+  }
+
+  function handleOnRemoveList() {
+    setIndex();
+    setSelectedExpression(null);
+    setListData([]);
   }
 
   return window.width > 480 ? (
@@ -50,8 +67,12 @@ export default function App() {
           <HistoryTable
             style={styles.tableBorderStyle}
             listData={listData}
-            onClickItem={(item) => {
-              setSelectedExpression(item);
+            id={idn}
+            onRemoveList={handleOnRemoveList}
+            onRemoveItem={(index) => handleOnRemoveItem(index)}
+            onClickItem={(index) => {
+              setIndex(index);
+              setSelectedExpression(listData[index]);
             }}
           />
         </View>
@@ -70,6 +91,7 @@ export default function App() {
       <HistoryTable
         style={mobileStyles.tableStyle}
         listData={listData}
+        id={idn}
         onClickItem={(item) => {
           setSelectedExpression(item);
         }}

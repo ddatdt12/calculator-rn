@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Text, TextInput, View, Button, StyleSheet } from "react-native";
 import PropTypes from "prop-types";
 import CButton from "./CButton";
-
+import uuid from "react-native-uuid";
 Calculator.prototype = {
   value: PropTypes.object,
   onSubmit: PropTypes.func,
@@ -17,18 +17,7 @@ function Calculator({ value, onSubmit }) {
   const [expression, setExpression] = useState("");
   const [haveError, setHaveError] = useState(false);
   const [text, setText] = useState("");
-  const getCircularReplacer = () => {
-    const seen = new WeakSet();
-    return (key, value) => {
-      if (typeof value === "object" && value !== null) {
-        if (seen.has(value)) {
-          return;
-        }
-        seen.add(value);
-      }
-      return value;
-    };
-  };
+
   const handleButtonPress = () => {
     try {
       if (!expression.trim()) {
@@ -43,7 +32,7 @@ function Calculator({ value, onSubmit }) {
       let result = eval(expressionStr);
       setText("Result: " + result);
       onSubmit({
-        key: Math.random() * 10000000,
+        key: uuid.v4(),
         data: expressionStr,
         result,
       });
@@ -54,9 +43,13 @@ function Calculator({ value, onSubmit }) {
   };
 
   useEffect(() => {
-    if (value) {
-      textInputRef.current.value = value.data;
+    if (value != null) {
+      setExpression(value.data);
       setText("Result: " + value.result);
+    } else {
+      console.log(123);
+      setExpression("");
+      setText(null);
     }
   }, [value]);
 
@@ -70,7 +63,7 @@ function Calculator({ value, onSubmit }) {
           borderColor: haveError ? "red" : "black",
         }}
       />
-      <CButton title="Calculate" onPress={handleButtonPress} color="red" />
+      <CButton title="Calculate" onPress={handleButtonPress} />
       {text ? (
         <Text style={{ fontSize: 30, marginTop: 20 }}>{text}</Text>
       ) : (
