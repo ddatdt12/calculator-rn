@@ -9,6 +9,8 @@ import {
 import SearchBar from "./SearchBar";
 import PropTypes from "prop-types";
 import { IconButton} from "react-native-paper";
+import { useEffect, useState } from "react";
+import HighlightText from "./HighlightText";
 
 HistoryTable.prototype = {
   listData: PropTypes.array,
@@ -20,40 +22,65 @@ HistoryTable.defaultProps = {
   onClickItem: null,
 };
 
-function HistoryTable(props) {
-  const { listData, onClickItem, id, onRemoveItem, onRemoveList } = props;
-  return listData.length != 0 ? (
-    <View style={props.style}>
-      <SearchBar />
-      <FlatList
-        data={listData}
-        renderItem={({ item, index }) => (
-          <TouchableOpacity onPress={() => onClickItem(index)}>
-            <View style={id == index ? styles.container2 : styles.container1} >
-              <View>
+function HistoryTable({ listData, onClickItem, id, onRemoveItem, onRemoveList }) {
+  const [expressions, setExpressions] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  useEffect(() => {
+    let newList = listData.filter((item) =>
+      (item.data + item.result)
+        .toLowerCase()
+        .includes(searchTerm.replace(" ", "").toLowerCase())
+    );
+
+    setExpressions(newList);
+  }, [searchTerm, listData]);
+
+  return (
+    <View style={styles.tableBorderStyle}>
+      {listData.length != 0 ? (
+        <>
+          <SearchBar
+            value={searchTerm}
+            onChangeText={(value) => setSearchTerm(value)}
+          />
+          <FlatList
+            data={expressions}
+            renderItem={({ item }) => (
+              <TouchableOpacity onPress={() => onClickItem(item)}>
+                <View style={id == index ? styles.container2 : styles.container1}>
+                  <View>
                 {id == index ? <IconButton icon="delete" iconColor={"blue"} size={20} style={styles.button}
                 onPress={() => onRemoveItem(index)}/> : <Text></Text>}
               </View>
               <View style={styles.item}>
-                <Text style={styles.dataStyle}>{item.data}</Text>
-                <Text style={styles.resultStyle}>{item.result}</Text>
+              <HighlightText
+                    text={item.data}
+                    highlight={searchTerm}
+                    style={styles.dataStyle}
+                  />
+                  <HighlightText
+                    text={item.result + ""}
+                    highlight={searchTerm}
+                    style={styles.resultStyle}
+                  />
               </View>
-            </View>
-          </TouchableOpacity>
-        )}
-      />
-      <Button onPress={()=>onRemoveList()} title="Clear all!!!"/>
-    </View>
-  ) : (
-    <View style={props.style}>
-      <Text style={styles.dataStyle}>No data found</Text>
+                </View>
+              </TouchableOpacity>
+            )}
+          />
+        </>
+      ) : (
+        <Text style={styles.dataStyle}>No data found</Text>
+      )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   dataStyle: {
-    fontSize: 30,
+    fontSize: 24,
+    textAlign: "center",
   },
   resultStyle: {
     fontSize: 20,
@@ -78,6 +105,13 @@ const styles = StyleSheet.create({
   },
   item: {
     alignItems: "flex-end"
+  },
+  tableBorderStyle: {
+    height: 500,
+    borderColor: "gray",
+    borderWidth: 1,
+    borderRadius: 20,
+    padding: 10,
   },
 });
 
