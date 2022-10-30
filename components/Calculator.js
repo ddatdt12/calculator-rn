@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Text, TextInput, View, Button, StyleSheet } from "react-native";
 import PropTypes from "prop-types";
+import Mexp from "math-expression-evaluator";
+
 import CButton from "./CButton";
 import uuid from "react-native-uuid";
 Calculator.prototype = {
@@ -29,7 +31,7 @@ function Calculator({ value, onSubmit }) {
       setHaveError(false);
       const expressionStr = expression.replace(/\s/g, "");
 
-      let result = eval(expressionStr);
+      let result = Mexp.eval(expressionStr);
       setText("Result: " + result);
       onSubmit({
         key: uuid.v4(),
@@ -63,12 +65,18 @@ function Calculator({ value, onSubmit }) {
           borderColor: haveError ? "red" : "black",
         }}
       />
-      <CButton title="Calculate" onPress={handleButtonPress} />
-      {text ? (
-        <Text style={{ fontSize: 30, marginTop: 20 }}>{text}</Text>
-      ) : (
-        <></>
+      {text && (
+        <Text
+          style={{
+            fontSize: 20,
+            marginVertical: 6,
+            color: haveError ? "red" : "black",
+          }}
+        >
+          {text}
+        </Text>
       )}
+      <CButton title="Calculate" onPress={handleButtonPress} />
     </View>
   );
 }
@@ -103,7 +111,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     padding: 10,
     fontSize: 30,
-    marginBottom: 20,
+    marginBottom: 6,
     borderRadius: 6,
   },
 });

@@ -1,13 +1,15 @@
+import { StyleSheet, useWindowDimensions, View, Modal } from "react-native";
+import Calculator from "./components/Calculator";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
-import { StyleSheet, useWindowDimensions, View } from "react-native";
-import Calculator from "./components/Calculator";
 import HistoryTable from "./components/HistoryTable";
+import Document from "./components/Document";
 
 export default function App() {
   const window = useWindowDimensions();
   const [selectedExpression, setSelectedExpression] = useState(null);
   const [listData, setListData] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
   const [idn, setIndex] = useState([]);
 
   useEffect(() => {
@@ -15,6 +17,7 @@ export default function App() {
       try {
         const value = await AsyncStorage.getItem("EXPRESSION_LIST");
         if (value !== null) {
+          console.log(value);
           const previousData = JSON.parse(value);
           if (Array.isArray(previousData)) {
             setListData(previousData);
@@ -29,11 +32,9 @@ export default function App() {
   useEffect(() => {
     (async () => {
       try {
-        console.log("List data:", listData);
         const jsonValue = JSON.stringify(listData);
         await AsyncStorage.setItem("EXPRESSION_LIST", jsonValue);
       } catch (e) {
-        setListData([]);
         console.log("setItem:", e);
       }
     })();
@@ -60,12 +61,54 @@ export default function App() {
     setListData([]);
   }
 
-  return window.width > 480 ? (
+  return (
     <View style={styles.mainPageStyle}>
-      <View style={{ flexDirection: "row", flex: 1, justifyContent: "center" }}>
-        <View style={styles.tableStyle}>
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View></View>
+      </Modal>
+      {window.width > 480 ? (
+        <View style={styles.mainPageStyle}>
+          <View
+            style={{ flexDirection: "row", flex: 1, justifyContent: "center" }}
+          >
+            <View style={styles.tableStyle}>
+              <HistoryTable
+                listData={listData}
+                id={idn}
+                onRemoveList={handleOnRemoveList}
+                onRemoveItem={(index) => handleOnRemoveItem(index)}
+                onClickItem={(index) => {
+                  setIndex(index);
+                  setSelectedExpression(listData[index]);
+                }}
+              />
+            </View>
+            <View style={styles.calculatorStyle}>
+              <Calculator
+                style={mobileStyles.calculatorStyle}
+                value={selectedExpression}
+                onSubmit={handleOnSubmit}
+              />
+              <Document />
+            </View>
+          </View>
+        </View>
+      ) : (
+        <>
+          <Calculator
+            style={mobileStyles.calculatorStyle}
+            value={selectedExpression}
+            onSubmit={handleOnSubmit}
+          />
           <HistoryTable
-            style={styles.tableBorderStyle}
+            style={mobileStyles.tableStyle}
             listData={listData}
             id={idn}
             onRemoveList={handleOnRemoveList}
@@ -75,27 +118,9 @@ export default function App() {
               setSelectedExpression(listData[index]);
             }}
           />
-        </View>
-        <View style={styles.calculatorStyle}>
-          <Calculator value={selectedExpression} onSubmit={handleOnSubmit} />
-        </View>
-      </View>
-    </View>
-  ) : (
-    <View style={mobileStyles.mainPageStyle}>
-      <Calculator
-        style={mobileStyles.calculatorStyle}
-        value={selectedExpression}
-        onSubmit={handleOnSubmit}
-      />
-      <HistoryTable
-        style={mobileStyles.tableStyle}
-        listData={listData}
-        id={idn}
-        onClickItem={(item) => {
-          setSelectedExpression(item);
-        }}
-      />
+          <Document />
+        </>
+      )}
     </View>
   );
 }
