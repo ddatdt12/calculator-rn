@@ -1,43 +1,16 @@
-
 import { StyleSheet, useWindowDimensions, View, Modal } from "react-native";
 import Calculator from "./components/Calculator";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
 import HistoryTable from "./components/HistoryTable";
+import Document from "./components/Document";
 
 export default function App() {
   const window = useWindowDimensions();
   const [selectedExpression, setSelectedExpression] = useState(null);
   const [listData, setListData] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const value = await AsyncStorage.getItem("EXPRESSION_LIST");
-        if (value !== null) {
-          console.log(value);
-          const previousData = JSON.parse(value);
-          if (Array.isArray(previousData)) {
-            setListData(previousData);
-          }
-        }
-      } catch (e) {
-        console.log("getItem:", e);
-      }
-    })();
-  }, []);
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const jsonValue = JSON.stringify(listData);
-        await AsyncStorage.setItem("EXPRESSION_LIST", jsonValue);
-      } catch (e) {
-        console.log("setItem:", e);
-      }
-    })();
-  }, [listData]);
+  const [idn, setIndex] = useState([]);
 
   useEffect(() => {
     (async () => {
@@ -71,6 +44,21 @@ export default function App() {
     const newList = [...listData];
     newList.unshift(item);
     setListData(newList);
+    setIndex(idn + 1);
+  }
+
+  function handleOnRemoveItem(index) {
+    const newList = [...listData];
+    newList.splice(index, 1);
+    setListData(newList);
+    setIndex();
+    setSelectedExpression(null);
+  }
+
+  function handleOnRemoveList() {
+    setIndex();
+    setSelectedExpression(null);
+    setListData([]);
   }
 
   return (
@@ -81,29 +69,39 @@ export default function App() {
         visible={modalVisible}
         onRequestClose={() => {
           setModalVisible(!modalVisible);
-        }}>
-        <View>
-        </View>
+        }}
+      >
+        <View></View>
       </Modal>
-      {window.width > 480 ?
+      {window.width > 480 ? (
         <View style={styles.mainPageStyle}>
-          <View style={{ flexDirection: "row", flex: 1, justifyContent: "center" }}>
+          <View
+            style={{ flexDirection: "row", flex: 1, justifyContent: "center" }}
+          >
             <View style={styles.tableStyle}>
               <HistoryTable
-                style={styles.tableBorderStyle}
                 listData={listData}
-                onClickItem={(item) => {
-                  setSelectedExpression(item);
+                id={idn}
+                onRemoveList={handleOnRemoveList}
+                onRemoveItem={(index) => handleOnRemoveItem(index)}
+                onClickItem={(index) => {
+                  setIndex(index);
+                  setSelectedExpression(listData[index]);
                 }}
               />
             </View>
             <View style={styles.calculatorStyle}>
-              <Calculator value={selectedExpression} onSubmit={handleOnSubmit} />
+              <Calculator
+                style={mobileStyles.calculatorStyle}
+                value={selectedExpression}
+                onSubmit={handleOnSubmit}
+              />
+              <Document />
             </View>
           </View>
         </View>
-        :
-        <View style={mobileStyles.mainPageStyle}>
+      ) : (
+        <>
           <Calculator
             style={mobileStyles.calculatorStyle}
             value={selectedExpression}
@@ -112,11 +110,17 @@ export default function App() {
           <HistoryTable
             style={mobileStyles.tableStyle}
             listData={listData}
-            onClickItem={(item) => {
-              setSelectedExpression(item);
+            id={idn}
+            onRemoveList={handleOnRemoveList}
+            onRemoveItem={(index) => handleOnRemoveItem(index)}
+            onClickItem={(index) => {
+              setIndex(index);
+              setSelectedExpression(listData[index]);
             }}
           />
-        </View>}
+          <Document />
+        </>
+      )}
     </View>
   );
 }

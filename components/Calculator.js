@@ -3,6 +3,8 @@ import { Text, TextInput, View, Button, StyleSheet } from "react-native";
 import PropTypes from "prop-types";
 import Mexp from "math-expression-evaluator";
 
+import CButton from "./CButton";
+import uuid from "react-native-uuid";
 Calculator.prototype = {
   value: PropTypes.object,
   onSubmit: PropTypes.func,
@@ -14,45 +16,67 @@ Calculator.defaultProps = {
 };
 
 function Calculator({ value, onSubmit }) {
-  const textInputRef = useRef(null);
+  const [expression, setExpression] = useState("");
+  const [haveError, setHaveError] = useState(false);
   const [text, setText] = useState("");
 
   const handleButtonPress = () => {
     try {
-      if (!textInputRef?.current?.value) {
+      if (!expression.trim()) {
         setText("Please enter an expression!");
+        setHaveError(true);
+
         return;
       }
-      let result = Mexp.eval(textInputRef.current.value);
+      setHaveError(false);
+      const expressionStr = expression.replace(/\s/g, "");
+
+      let result = Mexp.eval(expressionStr);
       setText("Result: " + result);
-      textInputRef.current.style = { ...styles.textInput };
       onSubmit({
-        key: Math.random() * 10000,
-        data: textInputRef.current.value,
+        key: uuid.v4(),
+        data: expressionStr,
         result,
       });
     } catch (error) {
+      setHaveError(true);
       setText("Invalid input");
-      textInputRef.current.style.borderColor = "red";
     }
   };
 
   useEffect(() => {
-    if (value) {
-      textInputRef.current.value = value.data;
+    if (value != null) {
+      setExpression(value.data);
       setText("Result: " + value.result);
+    } else {
+      console.log(123);
+      setExpression("");
+      setText(null);
     }
   }, [value]);
 
   return (
     <View>
-      <TextInput ref={textInputRef} style={styles.textInput} onLayout={() => textInputRef.current.focus()} />
-      <Button title="Calculate" onPress={handleButtonPress} />
-      {text ? (
-        <Text style={{ fontSize: 30, marginTop: 20 }}>{text}</Text>
-      ) : (
-        <></>
+      <TextInput
+        value={expression}
+        onChangeText={(text) => setExpression(text)}
+        style={{
+          ...styles.textInput,
+          borderColor: haveError ? "red" : "black",
+        }}
+      />
+      {text && (
+        <Text
+          style={{
+            fontSize: 20,
+            marginVertical: 6,
+            color: haveError ? "red" : "black",
+          }}
+        >
+          {text}
+        </Text>
       )}
+      <CButton title="Calculate" onPress={handleButtonPress} />
     </View>
   );
 }
@@ -87,7 +111,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     padding: 10,
     fontSize: 30,
-    marginBottom: 20,
+    marginBottom: 6,
     borderRadius: 6,
   },
 });

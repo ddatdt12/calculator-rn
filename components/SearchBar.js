@@ -12,7 +12,6 @@ const SearchBar = (props) => {
 
 const styles = StyleSheet.create({
   searchStyle: {
-    borderColor: "blue",
     borderWidth: 1,
     borderRadius: 6,
     marginVertical: 5,
