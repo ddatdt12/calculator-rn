@@ -27,10 +27,10 @@
 
 ## Chạy ứng dụng với docker
 
-- B1: Mở terminal
+- B1: Vào thư mục chứa code và mở terminal
 - B2: Chạy lệnh sau:
 
-  - `node:16.16.0-buster-slim` là tên image
+  - `node:16-buster-slim` là tên image
   - `rn-calculator` là tên container
 
 #### Window
