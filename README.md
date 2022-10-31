@@ -57,5 +57,5 @@ npm start
 
 - B5:
   - Quét mã QR ở trên terminal bằng Expo Go (Android) hoặc ứng dụng Máy ảnh (iOS)
-  - Nếu muốn truy cập bằng web thì xem dòng trong terminal: `Web is waiting on http://localhost:{port}`
+  - Nếu muốn truy cập bằng web thì `Press w` trong terminal sau đó xem dòng trong terminal: `Web is waiting on http://localhost:{port}` 
 - B6: Connect và sử dụng ứng dụng
